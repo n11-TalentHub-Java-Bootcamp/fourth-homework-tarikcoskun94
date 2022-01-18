@@ -20,6 +20,6 @@ public class UserResponseDTO {
     private String userEmail;
     private String userPhoneNumber;
     private String userPassword;
-    @JsonFormat(pattern = "dd-M-yyyy HH:mm:ss", timezone = "Europe/Istanbul")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Istanbul")
     private Date userRegistrationDate;
 }

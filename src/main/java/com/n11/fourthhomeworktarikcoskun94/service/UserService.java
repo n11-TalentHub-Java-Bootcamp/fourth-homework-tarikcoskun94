@@ -71,10 +71,15 @@ public class UserService {
 
     public void deleteById(Long id) {
 
+        this.existsById(id);
+
+        userRepository.deleteById(id);
+    }
+
+    public void existsById(Long id) {
+
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException("User is not found by ID: " + id);
         }
-
-        userRepository.deleteById(id);
     }
 }
