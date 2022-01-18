@@ -1,12 +1,19 @@
 package com.n11.fourthhomeworktarikcoskun94.entity;
 
 import com.n11.fourthhomeworktarikcoskun94.enum_.LoanType;
+import com.n11.fourthhomeworktarikcoskun94.util.DateUtil;
+import com.n11.fourthhomeworktarikcoskun94.util.InterestRateUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "loans")
 public class Loan implements Serializable {
@@ -17,10 +24,10 @@ public class Loan implements Serializable {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "main_amount", nullable = false)
+    @Column(name = "main_amount", nullable = false, scale = 2)
     private BigDecimal mainAmount;
 
-    @Column(name = "remaining_amount", nullable = false)
+    @Column(name = "remaining_amount", nullable = false, scale = 2)
     private BigDecimal remainingAmount;
 
     @Enumerated(EnumType.STRING)
@@ -68,4 +75,46 @@ public class Loan implements Serializable {
                     foreignKey = @ForeignKey(name = "fk_loan_collection_id")
             )
     private Collection collection;
+
+    @Transient
+    private BigDecimal interestAmount;
+
+    @PrePersist
+    @PreUpdate
+    private void runBeforePersist() {
+
+        this.mainAmount = this.mainAmount.setScale(2, RoundingMode.HALF_EVEN);
+        this.remainingAmount = this.remainingAmount.setScale(2, RoundingMode.HALF_EVEN);
+        this.maturityDate = DateUtil.goToEndOfTheDate(this.maturityDate);
+    }
+
+    @PostLoad
+    private void runOnLoad() {
+
+        this.calculateInterestAmount();
+    }
+
+    private void calculateInterestAmount() {
+
+        Date today = DateUtil.goToEndOfTheDate(new Date());
+        int remainingAmountCompareResult = this.remainingAmount.compareTo(BigDecimal.ZERO);
+
+        if (this.type == LoanType.MAIN && remainingAmountCompareResult == 1 && today.after(this.maturityDate)) {
+
+            Long diffDays = DateUtil.getDaysBetween(this.maturityDate, today);
+            Double rate = InterestRateUtil.getInterestRateByDate(this.maturityDate);
+
+            BigDecimal calculatedInterestAmount = this.remainingAmount.multiply(new BigDecimal(rate)).multiply(new BigDecimal(diffDays));
+            calculatedInterestAmount = calculatedInterestAmount.setScale(2, RoundingMode.HALF_EVEN);
+
+            if (calculatedInterestAmount.compareTo(BigDecimal.ONE) == -1) {
+                this.interestAmount = BigDecimal.ONE;
+            } else {
+                this.interestAmount = calculatedInterestAmount;
+            }
+        } else {
+
+            this.interestAmount = BigDecimal.ZERO;
+        }
+    }
 }
