@@ -1,9 +1,15 @@
 package com.n11.fourthhomeworktarikcoskun94.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "collections")
 public class Collection implements Serializable {

@@ -5,6 +5,7 @@ import com.n11.fourthhomeworktarikcoskun94.dto.loan.LoanMainSaveRequestDTO;
 import com.n11.fourthhomeworktarikcoskun94.dto.loan.LoanResponseDTO;
 import com.n11.fourthhomeworktarikcoskun94.dto.loan.LoanTotalAmountResponseDTO;
 import com.n11.fourthhomeworktarikcoskun94.entity.Loan;
+import com.n11.fourthhomeworktarikcoskun94.exception.LoanNotFoundException;
 import com.n11.fourthhomeworktarikcoskun94.exception.UserNotFoundException;
 import com.n11.fourthhomeworktarikcoskun94.repository.LoanRepository;
 import com.n11.fourthhomeworktarikcoskun94.util.DateUtil;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
