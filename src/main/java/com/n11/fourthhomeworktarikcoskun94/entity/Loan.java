@@ -99,6 +99,10 @@ public class Loan implements Serializable {
         Date today = DateUtil.goToEndOfTheDate(new Date());
         int remainingAmountCompareResult = this.remainingAmount.compareTo(BigDecimal.ZERO);
 
+        /**
+         * If loan type is MAIN, remaining amount is grater than 0 and maturity date has passed,
+         * calculate the interest amount.
+         */
         if (this.type == LoanType.MAIN && remainingAmountCompareResult == 1 && today.after(this.maturityDate)) {
 
             Long diffDays = DateUtil.getDaysBetween(this.maturityDate, today);
@@ -107,6 +111,10 @@ public class Loan implements Serializable {
             BigDecimal calculatedInterestAmount = this.remainingAmount.multiply(new BigDecimal(rate)).multiply(new BigDecimal(diffDays));
             calculatedInterestAmount = calculatedInterestAmount.setScale(2, RoundingMode.HALF_EVEN);
 
+            /**
+             * If calculated interest amount less than 1,
+             * assign 1 as constant.
+             * */
             if (calculatedInterestAmount.compareTo(BigDecimal.ONE) == -1) {
                 this.interestAmount = BigDecimal.ONE;
             } else {
