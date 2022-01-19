@@ -10,6 +10,7 @@ import com.n11.fourthhomeworktarikcoskun94.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class UserService {
         return UserMapper.INSTANCE.convertToUserResponseDTO(responseUser);
     }
 
+    @Transactional
     public void deleteById(Long id) {
 
         this.existsById(id);

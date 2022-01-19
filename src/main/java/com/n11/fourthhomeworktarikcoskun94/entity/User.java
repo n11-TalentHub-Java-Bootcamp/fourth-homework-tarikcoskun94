@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -49,6 +50,6 @@ public class User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<ProductComment> productComments;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Loan> loanList;
 }

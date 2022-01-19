@@ -23,4 +23,7 @@ public class Collection implements Serializable {
     @Column(name = "creation_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "collection", cascade = CascadeType.ALL)
+    private List<Loan> loanList;
 }
